@@ -1,0 +1,78 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam usecase {
+  BackgroundColor #FFF5F5
+  BorderColor #D32F2F
+  ArrowColor #555555
+  FontSize 13
+}
+skinparam actor {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+}
+title PrintXpress – Use Case Diagram
+
+actor Customer as C
+actor Administrator as A
+
+rectangle "PrintXpress Mobile Application" {
+  usecase "Register Account" as UC1
+  usecase "Login" as UC2
+  usecase "Browse Products" as UC3
+  usecase "Filter by Category" as UC3a
+  usecase "Search Products" as UC3b
+  usecase "View Product Detail" as UC4
+  usecase "Place Order" as UC5
+  usecase "Upload Design / Enter Text" as UC5a
+  usecase "Select Delivery Option" as UC5b
+  usecase "View My Orders" as UC6
+  usecase "Cancel Order" as UC6a
+  usecase "View Promotions" as UC7
+  usecase "View Print Guidelines" as UC8
+  usecase "Manage Profile" as UC9
+  usecase "Change Password" as UC9a
+  usecase "Logout" as UC10
+
+  usecase "Manage Products" as A1
+  usecase "Add / Edit Product" as A1a
+  usecase "Deactivate Product" as A1b
+  usecase "Manage Orders" as A2
+  usecase "Update Order Status" as A2a
+  usecase "Manage Promotions" as A3
+  usecase "Add / Edit Promotion" as A3a
+  usecase "View Customers" as A4
+}
+
+C --> UC1
+C --> UC2
+C --> UC3
+C --> UC4
+C --> UC5
+C --> UC6
+C --> UC7
+C --> UC8
+C --> UC9
+C --> UC10
+
+A --> UC2
+A --> A1
+A --> A2
+A --> A3
+A --> A4
+A --> UC10
+
+UC3 ..> UC3a : <<include>>
+UC3 ..> UC3b : <<include>>
+UC5 ..> UC5a : <<include>>
+UC5 ..> UC5b : <<include>>
+UC6 ..> UC6a : <<extend>>
+UC9 ..> UC9a : <<extend>>
+A1 ..> A1a : <<include>>
+A1 ..> A1b : <<extend>>
+A2 ..> A2a : <<include>>
+A3 ..> A3a : <<include>>
+@enduml

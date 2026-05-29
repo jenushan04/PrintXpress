@@ -1,0 +1,59 @@
+@startuml
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam sequence {
+  ArrowColor #555555
+  LifeLineBorderColor #D32F2F
+  LifeLineBackgroundColor #FFF5F5
+  ParticipantBackgroundColor #FFF5F5
+  ParticipantBorderColor #D32F2F
+  ActorBackgroundColor #F5F5F5
+  FontSize 12
+}
+title PrintXpress – Sequence Diagram: Customer Places an Order
+
+actor Customer
+participant LoginActivity
+participant CustomerHomeActivity
+participant ProductListActivity
+participant ProductDetailActivity
+participant PlaceOrderActivity
+participant DatabaseHelper
+participant SessionManager
+database "SQLite\n(printxpress.db)" as DB
+
+Customer -> LoginActivity : enter email + password
+LoginActivity -> DatabaseHelper : authenticate(email, password)
+DatabaseHelper -> DB : SELECT * FROM users WHERE email=?
+DB --> DatabaseHelper : User row
+DatabaseHelper -> DatabaseHelper : PasswordUtil.verify(plain, hash)
+DatabaseHelper --> LoginActivity : User
+LoginActivity -> SessionManager : saveSession(user)
+LoginActivity -> CustomerHomeActivity : Intent.start()
+
+Customer -> CustomerHomeActivity : tap "Browse Products"
+CustomerHomeActivity -> ProductListActivity : startActivity()
+ProductListActivity -> DatabaseHelper : getActiveProducts(category, search)
+DatabaseHelper -> DB : SELECT * FROM products WHERE active=1
+DB --> DatabaseHelper : product rows
+DatabaseHelper --> ProductListActivity : List<Product>
+ProductListActivity --> Customer : RecyclerView of products
+
+Customer -> ProductListActivity : tap a product card
+ProductListActivity -> ProductDetailActivity : Intent + productId
+ProductDetailActivity -> DatabaseHelper : getProduct(id)
+DatabaseHelper --> ProductDetailActivity : Product
+
+Customer -> ProductDetailActivity : tap "Order Now"
+ProductDetailActivity -> PlaceOrderActivity : Intent + productId
+Customer -> PlaceOrderActivity : enter qty, specs, text,\nupload design, choose delivery
+PlaceOrderActivity -> PlaceOrderActivity : Validator.isPositiveInt(qty)\nValidator.isNotEmpty(address)
+PlaceOrderActivity -> PlaceOrderActivity : compute total = price × qty
+PlaceOrderActivity -> DatabaseHelper : placeOrder(order)
+DatabaseHelper -> DB : INSERT INTO orders (...) VALUES (...)
+DB --> DatabaseHelper : new row id
+DatabaseHelper --> PlaceOrderActivity : orderId
+
+PlaceOrderActivity --> Customer : Toast "Order placed successfully"
+PlaceOrderActivity -> Customer : finish() and return to home
+@enduml

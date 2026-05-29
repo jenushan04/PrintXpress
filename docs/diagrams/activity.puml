@@ -1,0 +1,78 @@
+@startuml
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam activity {
+  BackgroundColor #FFF5F5
+  BorderColor #D32F2F
+  ArrowColor #555555
+  DiamondBackgroundColor #FFF8E1
+  DiamondBorderColor #F57C00
+  StartColor #388E3C
+  EndColor #D32F2F
+  FontSize 12
+}
+title PrintXpress – Activity Diagram: Order Placement
+
+start
+:Customer launches PrintXpress;
+:Splash screen (2 sec);
+
+if (Session active?) then (yes)
+  if (Role == ADMIN?) then (yes)
+    :Open AdminHomeActivity;
+    stop
+  else (no)
+    :Open CustomerHomeActivity;
+  endif
+else (no)
+  :Open LoginActivity;
+  repeat
+    :Customer enters email + password;
+    :Validator.isValidEmail()\nValidator.isValidPassword();
+    if (Format valid?) then (yes)
+      :DatabaseHelper.authenticate();
+      if (Credentials match?) then (yes)
+        :SessionManager.saveSession();
+        :Open CustomerHomeActivity;
+        break
+      else (no)
+        :Show Toast "Invalid email or password";
+      endif
+    else (no)
+      :Show inline error on field;
+    endif
+  repeat while (Customer retries?) is (yes)
+endif
+
+:Tap "Browse Products" card;
+:Load active products from SQLite;
+:Display RecyclerView of product cards;
+
+:Customer optionally filters by\ncategory or searches by keyword;
+:Customer selects a product;
+:Open ProductDetailActivity;
+:Customer taps "Order Now";
+:Open PlaceOrderActivity;
+
+repeat
+  :Customer enters quantity, specs,\ncustom text, design URI;
+  :Customer chooses Pickup or Home Delivery;
+  if (Home Delivery?) then (yes)
+    :Customer enters delivery address;
+  endif
+  :Validate quantity > 0\nand address (if delivery);
+  if (Valid?) then (yes)
+    break
+  else (no)
+    :Show inline error on field;
+  endif
+repeat while (Customer retries?) is (yes)
+
+:Compute total = price × quantity;
+:DatabaseHelper.placeOrder(order);
+:SQLite INSERT into orders\nstatus = PENDING;
+:Show Toast "Order placed successfully";
+:Return to CustomerHomeActivity;
+
+stop
+@enduml

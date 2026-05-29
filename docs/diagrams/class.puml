@@ -1,0 +1,139 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam class {
+  BackgroundColor #FFF5F5
+  BorderColor #D32F2F
+  ArrowColor #555555
+  FontSize 12
+}
+skinparam stereotypeCBackgroundColor #FFC107
+title PrintXpress – Class Diagram (Model + Controller + Helper Layer)
+
+package "Model" #FAFAFA {
+  class User {
+    - id : long
+    - name : String
+    - email : String
+    - phone : String
+    - passwordHash : String
+    - address : String
+    - role : String
+    - createdAt : long
+    + isAdmin() : boolean
+    + getters/setters()
+  }
+  class Product {
+    - id : long
+    - name : String
+    - category : String
+    - description : String
+    - material : String
+    - sizeOption : String
+    - price : double
+    - active : boolean
+    + getters/setters()
+  }
+  class Order {
+    - id : long
+    - userId : long
+    - productId : long
+    - quantity : int
+    - specifications : String
+    - customText : String
+    - designFileUri : String
+    - deliveryType : String
+    - deliveryAddress : String
+    - totalAmount : double
+    - status : String
+    - createdAt : long
+    - updatedAt : long
+    + canBeCancelledByCustomer() : boolean
+  }
+  class Promotion {
+    - id : long
+    - title : String
+    - description : String
+    - discountPercent : int
+    - validUntil : String
+    - active : boolean
+  }
+}
+
+package "Persistence" #F5F5F5 {
+  class DatabaseHelper << (S,#FFC107) SQLiteOpenHelper >> {
+    - DB_NAME = "printxpress.db"
+    - DB_VERSION = 1
+    + onCreate(db)
+    + onUpgrade(db, old, new)
+    + registerUser(u, pwd) : long
+    + authenticate(email, pwd) : User
+    + addProduct(p) : long
+    + getActiveProducts(cat, search) : List<Product>
+    + placeOrder(o) : long
+    + updateOrderStatus(id, status) : boolean
+    + getOrdersForUser(uid) : List<Order>
+    + getAllOrders(filter) : List<Order>
+    + addPromotion(p) : long
+    + getActivePromotions() : List<Promotion>
+  }
+}
+
+package "Utilities" #F5F5F5 {
+  class PasswordUtil {
+    + {static} hash(plain) : String
+    + {static} verify(plain, hash) : boolean
+  }
+  class Validator {
+    + {static} isValidEmail(s) : boolean
+    + {static} isValidPhone(s) : boolean
+    + {static} isValidPassword(s) : boolean
+    + {static} isPositiveInt(s) : boolean
+  }
+  class SessionManager {
+    - prefs : SharedPreferences
+    + saveSession(u)
+    + getUser() : User
+    + clearSession()
+    + isLoggedIn() : boolean
+  }
+}
+
+package "Controller (Activities)" #FFF8E1 {
+  class LoginActivity
+  class RegisterActivity
+  class SplashActivity
+  class CustomerHomeActivity
+  class ProductListActivity
+  class ProductDetailActivity
+  class PlaceOrderActivity
+  class MyOrdersActivity
+  class PromotionsActivity
+  class GuidelinesActivity
+  class ProfileActivity
+  class AdminHomeActivity
+  class AdminOrdersActivity
+  class AdminProductsActivity
+  class AdminEditProductActivity
+  class AdminPromotionsActivity
+  class AdminEditPromotionActivity
+  class AdminCustomersActivity
+}
+
+User "1" -- "0..*" Order : places >
+Product "1" -- "0..*" Order : ordered as >
+LoginActivity ..> DatabaseHelper : authenticate
+RegisterActivity ..> DatabaseHelper : registerUser
+RegisterActivity ..> Validator
+LoginActivity ..> Validator
+PlaceOrderActivity ..> DatabaseHelper : placeOrder
+ProductListActivity ..> DatabaseHelper : getActiveProducts
+MyOrdersActivity ..> DatabaseHelper : getOrdersForUser
+AdminOrdersActivity ..> DatabaseHelper : getAllOrders / updateOrderStatus
+AdminProductsActivity ..> DatabaseHelper : getAllProductsForAdmin
+AdminPromotionsActivity ..> DatabaseHelper : getAllPromotionsForAdmin
+ProfileActivity ..> SessionManager
+LoginActivity ..> SessionManager : saveSession
+DatabaseHelper ..> PasswordUtil
+@enduml

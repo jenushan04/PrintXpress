@@ -1,0 +1,75 @@
+@startuml
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam class {
+  BackgroundColor #FFF5F5
+  BorderColor #D32F2F
+  ArrowColor #555555
+  FontSize 12
+}
+hide circle
+hide methods
+title PrintXpress – Entity Relationship Diagram (Logical Model)
+
+entity "USERS" as users {
+  * id : INTEGER <<PK, AUTOINCREMENT>>
+  --
+  * name : TEXT
+  * email : TEXT <<UNIQUE>>
+  * phone : TEXT
+  * password_hash : TEXT
+    address : TEXT
+  * role : TEXT  (ADMIN | CUSTOMER)
+  * created_at : INTEGER (epoch ms)
+}
+
+entity "PRODUCTS" as products {
+  * id : INTEGER <<PK, AUTOINCREMENT>>
+  --
+  * name : TEXT
+  * category : TEXT
+    description : TEXT
+    material : TEXT
+    size_option : TEXT
+  * price : REAL
+  * active : INTEGER (0|1)
+}
+
+entity "ORDERS" as orders {
+  * id : INTEGER <<PK, AUTOINCREMENT>>
+  --
+  * user_id : INTEGER <<FK → users.id>>
+  * product_id : INTEGER <<FK → products.id>>
+  * quantity : INTEGER
+    specifications : TEXT
+    custom_text : TEXT
+    design_file_uri : TEXT
+  * delivery_type : TEXT (PICKUP | HOME_DELIVERY)
+    delivery_address : TEXT
+  * total_amount : REAL
+  * status : TEXT (PENDING | PROCESSING |
+    PRINTING | READY | COMPLETED | CANCELLED)
+  * created_at : INTEGER
+  * updated_at : INTEGER
+}
+
+entity "PROMOTIONS" as promos {
+  * id : INTEGER <<PK, AUTOINCREMENT>>
+  --
+  * title : TEXT
+    description : TEXT
+  * discount_percent : INTEGER
+    valid_until : TEXT (YYYY-MM-DD)
+  * active : INTEGER (0|1)
+}
+
+users ||--o{ orders : "places"
+products ||--o{ orders : "appears in"
+
+note bottom of promos
+  Promotions are standalone records
+  (no FK). They are displayed to all
+  customers and managed by the
+  Administrator role.
+end note
+@enduml

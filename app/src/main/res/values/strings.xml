@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PrintXpress</string>
+    <string name="app_tagline">Digital Printing, Delivered Fast</string>
+
+    <!-- Auth -->
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="logout">Logout</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="full_name">Full Name</string>
+    <string name="address">Address</string>
+    <string name="dont_have_account">Don\'t have an account? Register</string>
+    <string name="have_account">Already have an account? Login</string>
+
+    <!-- Customer -->
+    <string name="browse_products">Browse Products</string>
+    <string name="my_orders">My Orders</string>
+    <string name="promotions">Promotions</string>
+    <string name="guidelines">Print Guidelines &amp; FAQ</string>
+    <string name="profile">My Profile</string>
+    <string name="place_order">Place Order</string>
+    <string name="quantity">Quantity</string>
+    <string name="specifications">Specifications / Instructions</string>
+    <string name="delivery_option">Delivery Option</string>
+    <string name="pickup">Store Pickup</string>
+    <string name="home_delivery">Home Delivery</string>
+    <string name="upload_design">Upload Design (optional)</string>
+    <string name="custom_text">Custom Text (optional)</string>
+    <string name="submit_order">Submit Order</string>
+    <string name="cancel_order">Cancel Order</string>
+
+    <!-- Admin -->
+    <string name="admin_dashboard">Admin Dashboard</string>
+    <string name="manage_orders">Manage Orders</string>
+    <string name="manage_products">Manage Products</string>
+    <string name="manage_promotions">Manage Promotions</string>
+    <string name="customers">Customers</string>
+    <string name="add_product">Add Product</string>
+    <string name="add_promotion">Add Promotion</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="update_status">Update Status</string>
+
+    <!-- Common -->
+    <string name="welcome">Welcome</string>
+    <string name="search">Search</string>
+    <string name="empty_list">Nothing here yet</string>
+    <string name="error_required">Required</string>
+</resources>
