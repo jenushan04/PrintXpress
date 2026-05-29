@@ -125,7 +125,7 @@ The app is designed using **Material Design principles** with:
 ## 1️⃣ Clone Repository
 
 ```bash id="f8m5t7"
-git clone https://github.com/yourusername/printxpress.git
+git clone https://github.com/jenushan04/PrintXpress.git
 ```
 
 ---
